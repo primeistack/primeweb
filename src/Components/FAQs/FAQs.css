@@ -1,0 +1,142 @@
+.faq-buyer-tip {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 16px;
+    margin: 0 0 32px;
+    padding: 18px 22px;
+    border-left: 3px solid #75a85d;
+    background: #eef3e9;
+}
+
+.faq-buyer-tip span {
+    color: #365c3b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+}
+
+.faq-buyer-tip p {
+    margin: 0;
+    color: #46594a;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.faq-list {
+    border-top: 1px solid #dce5d6;
+}
+
+.faq-item {
+    border-bottom: 1px solid #dce5d6;
+}
+
+.faq-item summary {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 14px;
+    min-height: 76px;
+    padding: 14px 4px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary:focus-visible {
+    outline: 2px solid #75a85d;
+    outline-offset: 3px;
+}
+
+.faq-number {
+    color: #668856;
+    font-family: 'DM Serif Display', serif;
+    font-size: 21px;
+}
+
+.faq-question {
+    color: #1a3022;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.faq-toggle {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #a9bba4;
+    border-radius: 50%;
+}
+
+.faq-toggle::before,
+.faq-toggle::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 1px;
+    background: #365c3b;
+    content: '';
+    transform: translate(-50%, -50%);
+}
+
+.faq-toggle::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform .2s ease;
+}
+
+.faq-item[open] .faq-toggle::after {
+    transform: translate(-50%, -50%);
+}
+
+.faq-answer {
+    padding: 0 42px 22px 66px;
+}
+
+.faq-answer ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+    color: #526256;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.faq-answer li::marker {
+    color: #75a85d;
+}
+
+.faq-important {
+    margin-top: 34px;
+}
+
+@media (max-width: 640px) {
+    .faq-buyer-tip {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        padding: 17px 18px;
+    }
+
+    .faq-item summary {
+        grid-template-columns: 34px minmax(0, 1fr) 22px;
+        gap: 10px;
+        min-height: 70px;
+    }
+
+    .faq-question {
+        font-size: 12px;
+    }
+
+    .faq-answer {
+        padding: 0 10px 19px 44px;
+    }
+
+    .faq-answer ul {
+        font-size: 11px;
+    }
+}

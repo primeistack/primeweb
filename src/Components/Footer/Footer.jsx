@@ -1,13 +1,10 @@
 import './Footer.css'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.jpg'
-import faqPdf from '../../assets/primerealtorss.pdf'
-import privacyPolicyPdf from '../../assets/Prime_Realtors_Janaharsha_Privacy_Policy_1.pdf'
-import termsPdf from '../../assets/Prime_Realtors_Janaharsha_Terms_and_Conditions.pdf'
 
 const footerGroups = [
     { title: 'Explore', links: [{ label: 'Our Presence', path: '/our-presence' }, { label: 'Gallery', path: '/gallery' }, { label: 'Buying ', path: '/buy-sell?tab=buy' }, { label: 'Selling ', path: '/buy-sell?tab=sell' }] },
-    { title: 'Support', links: [{ label: 'Contact us', path: '/contact' }, { label: "FAQ's", href: faqPdf }, { label: 'Terms & Conditions', href: termsPdf }, { label: 'Privacy policy', href: privacyPolicyPdf },] },
+    { title: 'Support', links: [{ label: 'Contact us', path: '/contact' }, { label: "FAQ's", path: '/faqs' }, { label: 'Terms & Conditions', path: '/terms-and-conditions' }, { label: 'Privacy policy', path: '/privacy-policy' }] },
 ]   
 
 function Footer() {
@@ -33,7 +30,7 @@ function Footer() {
                         </a>
                     </nav>
                 </div>
-                <div className="footer-links">{footerGroups.map((group) => <div className="footer-group" key={group.title}><h2>{group.title}</h2>{group.links.map((link) => link.href ? <a href={link.href} target="_blank" rel="noreferrer" key={link.label}>{link.label}</a> : <button type="button" onClick={() => navigateFromFooter(link.path)} key={link.label}>{link.label}</button>)}</div>)}</div>
+                <div className="footer-links">{footerGroups.map((group) => <div className="footer-group" key={group.title}><h2>{group.title}</h2>{group.links.map((link) => <Link to={link.path} key={link.label}>{link.label}</Link>)}</div>)}</div>
                 <div className="footer-contact">
                     <h2>Get in touch</h2>
                     <a href="tel:+918073648872">Kalyan: 80736 48872</a>
