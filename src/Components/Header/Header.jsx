@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './Header.css'
-import logo from '../../assets/logo.png'
+import logo from '../../assets/Logo.png'
 const navItems = [
 	{ label: 'Home', href: '/' },
 	{ label: 'Our Presence', href: '/our-presence' },
