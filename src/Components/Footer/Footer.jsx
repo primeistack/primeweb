@@ -7,7 +7,7 @@ import termsPdf from '../../assets/Prime_Realtors_Janaharsha_Terms_and_Condition
 
 const footerGroups = [
     { title: 'Explore', links: [{ label: 'Our Presence', path: '/our-presence' }, { label: 'Gallery', path: '/gallery' }, { label: 'Buying ', path: '/buy-sell?tab=buy' }, { label: 'Selling ', path: '/buy-sell?tab=sell' }] },
-    { title: 'Support', links: [{ label: 'Contact us', path: '/contact' }, { label: 'FAQs', href: faqPdf }, { label: 'Privacy policy', href: privacyPolicyPdf }, { label: 'Terms & Conditions', href: termsPdf }] },
+    { title: 'Support', links: [{ label: 'Contact us', path: '/contact' }, { label: "FAQ's", href: faqPdf }, { label: 'Terms & Conditions', href: termsPdf }, { label: 'Privacy policy', href: privacyPolicyPdf },] },
 ]   
 
 function Footer() {
