@@ -10,6 +10,9 @@ import BuySell from './Components/buysell.jsx'
 import ThankYou from './Components/ThankYou/ThankYou.jsx'
 import Gallery from './Components/Gallery/Gallery.jsx'
 import NewsUpdate from './Components/NewsUpdate/NewsUpdate.jsx'
+import FAQs from './Components/FAQs/FAQs.jsx'
+import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy.jsx'
+import TermsAndConditions from './Components/TermsAndConditions/TermsAndConditions.jsx'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
@@ -37,6 +40,9 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/news-update" element={<NewsUpdate />} />
         <Route path="/thank-you" element={<ThankYou />} />
+        <Route path="/faqs" element={<FAQs />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />
