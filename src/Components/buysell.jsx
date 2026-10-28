@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './buy.css'
 import layoutOverview from '../assets/layout.png'
+import farmhouseImage from '../assets/formhouse.jpeg'
+import weekendImage from '../assets/Weekendtrips.jpeg'
+import farmlandImage from '../assets/farmland.jpeg'
+import futureHomeImage from '../assets/futurehome.jpeg'
 import phaseA from '../assets/Layouts/janaharsha-phase-a.pdf'
 import phaseBK from '../assets/Layouts/janaharsha-phase-b-k.pdf'
 import phaseBExtension from '../assets/Layouts/janaharsha-phase-b-ext.pdf'
@@ -50,6 +54,13 @@ const plotPlanExamples = [
     { plot: 'QP-1045 · Part A', phase: 'Janaharsha', survey: 'To be confirmed', area: '120', width: '49′ 4″', depth: '21′ 10″', top: 'QP-1045 · Part B', right: '40′ wide road', left: 'QP-1045 · Part D', bottom: 'QP-1044' },
 ]
 
+const buyInspirationImages = [
+    { src: farmhouseImage, alt: 'Farmhouse lifestyle' },
+    { src: weekendImage, alt: 'Weekend retreat' },
+    { src: farmlandImage, alt: 'Farm land' },
+    { src: futureHomeImage, alt: 'Future home' },
+]
+
 function PlotBoundary({ side, label }) {
     const roadMatch = label.match(/(\d+\s*[′'’]?\s*(?:wide\s*)?road)/i)
 
@@ -64,7 +75,7 @@ function PlotBoundary({ side, label }) {
 
     return <span className={`plot-edge-label plot-edge-${side} plot-edge-neighbour`}>
         <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="2.5" width="15" height="15" /><path d="M6 6h8v8H6z" /></svg>
-        <strong>{plotNumber}</strong>
+        {/* <strong>{plotNumber}</strong> */}
     </span>
 }
 
@@ -210,6 +221,11 @@ function BuySell() {
                                 {/* <p className="buy-eyebrow">Plot-level examples</p> */}
                                 <h3 id="plot-plan-title">See the shape of a <em>plot.</em></h3></div>
                             <p>Registration-plan details help you understand plot dimensions, area, and neighbouring roads before you enquire.</p>
+                        </div>
+                        <div className="buy-inspiration-grid" aria-label="Ways to enjoy a plot">
+                            {buyInspirationImages.map((image) => <figure key={image.alt}>
+                                <img src={image.src} alt={image.alt} />
+                            </figure>)}
                         </div>
                         <div className="plot-plan-grid">
                             {plotPlanExamples.map((plan) =>

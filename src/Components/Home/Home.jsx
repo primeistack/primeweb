@@ -2,29 +2,73 @@ import './Home.css'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import homeHero from '../../assets/Home1.jpg'
-import futureplanning from '../../assets/planfuture.jpg'
 import layoutMap from '../../assets/layout.png'
-import farmhouseImage from '../../assets/formhouse.jpg'
-import weekendImage from '../../assets/Weekendtrips.jpg'
-import farmlandImage from '../../assets/farmland.jpg'
-import organicImage from '../../assets/organic.jpg'
-import plantationImage from '../../assets/plant.jpg'
-import futureHomeImage from '../../assets/futurehome.jpg'
 import natureImage from '../../assets/nature.jpg'
-const plotUses = [['Farmhouse', 'Create a peaceful farmhouse based on your family lifestyle and future plans.'], ['Weekend retreat', 'A private space outside the city for family time and slower weekends.'], ['Farm land', 'Use larger plots for plantation, gardening and suitable farming activities.'], ['Organic garden', 'Grow vegetables, herbs, fruit trees and seasonal produce for family use.'], ['Plantation', 'Retain existing trees and add new plantation around your own landscape vision.'], ['Future home', 'Secure land today and consider residential development when the timing is right.']]
-const localities = [['Janaharsha', 'Multiple blocks', '2,000+ acres with teak plantations and established roads.', '120 - 2400+ Sq. Yds'], ['Ibrahimpatnam', 'Multiple blocks', 'Strong road connectivity with access to ORR and Vijayawada Highway.', '150 - 1000 Sq. Yds'], ['Polkampally', 'Select blocks', 'An emerging area with affordable plots and future potential.', '120 - 600 Sq. Yds'], ['Manneguda', 'Select blocks', 'Strategic access to major highways and growing infrastructure.', '200 - 800 Sq. Yds'], ['Raipole', 'Select blocks', 'A quieter locality suited to farmhouse and plantation buyers.', '360 - 1200 Sq. Yds'], ['Naganpally', 'Select blocks', 'A well-connected mix of residential and agricultural land.', '120 - 600 Sq. Yds']]
+import futureplanning from '../../assets/planfuture.jpg'
+
+// plot possibilities
+
+import farmhouseImage from '../../assets/formhouse.jpeg'
+import weekendImage from '../../assets/Weekendtrips.jpeg'
+import farmlandImage from '../../assets/farmland.jpeg'
+import organicImage from '../../assets/organic.jpeg'
+import plantationImage from '../../assets/plant.jpg'
+import futureHomeImage from '../../assets/futurehome.jpeg'
+
+
+// near by attractions
+import RamjoiImage from '../../assets/NearBy/Ramoji.jpeg'
+import Cbse from '../../assets/NearBy/CBSE.jpeg'
+import Park from '../../assets/NearBy/Park.jpeg'
+import Sangitemple from '../../assets/NearBy/sangitemple.jpeg'
+import sivalayyam from '../../assets/NearBy/sivalayyam.jpeg'
+import wonderla from '../../assets/NearBy/wonderla.jpeg'
+import LBNagar from '../../assets/NearBy/Lbnagar.jpeg'
+import Koheda from '../../assets/NearBy/Koheda.jpeg'
+import octopus from '../../assets/NearBy/octopus.jpeg'
+import gandhrava from '../../assets/NearBy/gandhrvaresort.jpeg'
+import mountopera from '../../assets/NearBy/mountopera.jpeg'
+import park1 from '../../assets/NearBy/Park1.jpeg'
+
+
+const plotUses = [
+    ['Farmhouse', 'Create a peaceful farmhouse based on your family lifestyle and future plans.'],
+    ['Weekend retreat', 'A private space outside the city for family time and slower weekends.'],
+    ['Farm land', 'Use larger plots for plantation, gardening and suitable farming activities.'], 
+    ['Organic garden', 'Grow vegetables, herbs, fruit trees and seasonal produce for family use.'],
+    ['Plantation', 'Retain existing trees and add new plantation around your own landscape vision.'],
+    ['Future home', 'Secure land today and consider residential development when the timing is right.'],
+    // ['Investment', 'A smart land investment for long-term growth and future plans.'],
+    // ['Nature getaway','A peaceful green space for relaxation and family time.']
+    ]
+const remoteStepRows = [
+    [['Share your requirement', '✉'], ['Prime Realtors shortlists options', '⌕'], ['Layout plans and details shared', '▤']],
+    [['Site photos / video walkthrough', '◉'], ['Family or representative site visit', '⌂'], ['Final shortlisting', '✓']],
+    [['Documentation coordination', '▣'], ['Registration and handover support', '↗']],
+]
+const localities = [
+    ['Janaharsha', 'Multiple blocks', '2,000+ acres with teak plantations and established roads.', '120 - 2400+ Sq. Yds'], 
+    ['Ibrahimpatnam', 'Multiple blocks', 'Strong road connectivity with access to ORR and Vijayawada Highway.', '150 - 1000 Sq. Yds'],
+    ['Polkampally', 'Select blocks', 'An emerging area with affordable plots and future potential.', '120 - 600 Sq. Yds'],
+    ['Manneguda', 'Select blocks', 'Strategic access to major highways and growing infrastructure.', '200 - 800 Sq. Yds'], 
+    ['Raipole', 'Select blocks', 'A quieter locality suited to farmhouse and plantation buyers.', '360 - 1200 Sq. Yds'],
+    ['Naganpally', 'Select blocks', 'A well-connected mix of residential and agricultural land.', '120 - 600 Sq. Yds']
+    ]
 const plotSizes = ['120', '200', '240', '360', '480', '600', '800', '900', '1000', '1200', '2400+']
 const opportunities = [['600 Sq. Yds', 'Janaharsha - Block XX', 'East Facing', 'Investment / Future Home'], ['1200 Sq. Yds', 'Janaharsha - Block YY', 'North Facing', 'Farmhouse / Larger Land'], ['240 Sq. Yds', 'Ibrahimpatnam - Block A', 'West Facing', 'Investment'], ['2400+ Sq. Yds', 'Janaharsha - Block ZZ', 'South Facing', 'Farm Land / Plantation']]
 const nearbyAttractions = [
-    { title: 'Ramoji Film City', distance: '3 km', icon: '🎬', tone: 'tone-1' },
-    { title: 'Sanghi Temple', distance: '9 km', icon: '🛕', tone: 'tone-2' },
-    { title: 'Octopus Commando Training Center', distance: '4 km', icon: '🎖️', tone: 'tone-3' },
-    { title: 'Koheda Fruit Market', distance: '6 km', icon: '🍇', tone: 'tone-4' },
-    { title: 'Mount Opera', distance: '10 km', icon: '🎵', tone: 'tone-5' },
-    { title: 'L.B. Nagar', distance: '25 km', icon: '🏘️', tone: 'tone-6' },
-    { title: 'Do Science', distance: '9 km', icon: '🔬', tone: 'tone-7' },
-    { title: 'Gandharva Resort', distance: '6 km', icon: '🌿', tone: 'tone-8' },
-    { title: 'Sri Rama Chandra Temple', distance: '6 km', icon: '🛕', tone: 'tone-9' },
+    { title: 'Ramoji Film City', distance: '3 km', icon: RamjoiImage, tone: 'tone-1' },
+    { title: 'Sanghi Temple', distance: '9 km', icon: Sangitemple, tone: 'tone-2' },
+    { title: 'Octopus Commando Training Center', distance: '4 km', icon: octopus, tone: 'tone-3' },
+    { title: 'Koheda Fruit Market', distance: '6 km', icon: Koheda, tone: 'tone-4' },
+    { title: 'Wonderla ', distance: '10 km', icon: wonderla, tone: 'tone-5' },
+    { title: 'L.B. Nagar', distance: '25 km', icon: LBNagar, tone: 'tone-6' },
+    { title: 'Neelakanta vidhya peet', distance: '9 km', icon: Cbse, tone: 'tone-7' },
+    { title: 'Brundhavanam park', distance: '6 km', icon: Park, tone: 'tone-8' },
+    { title: 'Polkampally Shivalayam Temple', distance: '6 km', icon: sivalayyam, tone: 'tone-9' },
+    { title: 'Mount opera', distance: '9 km', icon: mountopera, tone: 'tone-10' },
+    { title: 'Gandhrava Resort', distance: '6 km', icon: gandhrava, tone: 'tone-11' },
+    { title: 'Park', distance: '6 km', icon: park1, tone: 'tone-12' },
 ]
 const locationHighlights = [
     { title: 'Vijayawada Highway', icon: '🛣️' },
@@ -73,7 +117,7 @@ function MetricBand() {
     return (
         <section className="metric-band">
             <div className="content-width metrics-row">
-                <div className="metric-card metric-card-acres"><MetricValue value="2000" suffix="+" /><span className="metric-label">Acres</span><span className="metric-hover-copy">A large established plotted landscape.</span></div>
+                <div className="metric-card metric-card-acres"><span className="metric-card-tag">Our expertise</span><MetricValue value="2000" suffix="+" /><span className="metric-label">Acres</span><span className="metric-hover-copy">A large established plotted landscape.</span></div>
                 <div className="metric-card metric-card-plots"><MetricValue value="60000" suffix="+" /><span className="metric-label">Plots</span><span className="metric-hover-copy">Multiple blocks and plot sizes.</span></div>
                 <div className="metric-card metric-card-experience"><MetricValue value="10" suffix="+ years" /><span className="metric-label">Local expertise</span><span className="metric-hover-copy">Knowledge that helps you choose clearly.</span></div>
                 <div className="metric-card metric-card-teak"><strong>Teak</strong><span className="metric-label">Plantations</span><span className="metric-hover-copy">Nature already growing with the land.</span></div>
@@ -152,7 +196,13 @@ function Home() {
                         <div className="attraction-map-grid">
                             {nearbyAttractions.map((item) => (
                                 <div className={`attraction-pill ${item.tone}`} key={item.title}>
-                                    <span className="attraction-icon" aria-hidden="true">{item.icon}</span>
+                                    <span className="attraction-icon" aria-hidden="true"> 
+                                          {typeof item.icon === 'string' && item.icon.startsWith('/') ? (
+                                                <img src={item.icon} alt={item.title} />
+                                            ) : (
+                                                item.icon
+                                            )}
+                                    </span>
                                     <div>
                                         <strong>{item.title}</strong>
                                         <small>{item.distance}</small>
@@ -161,7 +211,7 @@ function Home() {
                             ))}
                         </div>
                     </div>
-                    <div className="location-highlight-card">
+                    {/* <div className="location-highlight-card">
                         <h2>Location Highlights</h2>
                         <ul className="location-highlight-list">
                             {locationHighlights.map((item) => (
@@ -171,7 +221,7 @@ function Home() {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
                 </div>
             </section>
             {/* <section className="foundation-section">
@@ -218,7 +268,6 @@ function Home() {
                     <img src={futureplanning} alt="future-plan" className='future-paln-img' />
                 </div>
             </section>
-            
             {/* Nature Plan */}
             <section className="nature-section">
                 <div className="content-width nature-row">
@@ -290,8 +339,7 @@ function Home() {
                         </article>)}
                     </div>
                 </div>
-            </section>
-           
+            </section> 
           {/* NRI / remote buyer support */}
             <section className="remote-section">
                 <div className="content-width remote-row">
@@ -301,10 +349,13 @@ function Home() {
                         
                     </div>
                     <div className="remote-steps">
-                        {[['Share your requirement', '✉'], ['Prime Realtors shortlists options', '⌕'], ['Layout plans and details shared', '▤'], ['Site photos / video walkthrough', '◉'], ['Family or representative site visit', '⌂'], ['Final shortlisting', '✓'], ['Documentation coordination', '▣'], ['Registration and handover support', '↗']].map(([step, icon]) =>
-                            <div key={step}>
-                                <span className="remote-step-icon" aria-hidden="true">{icon}</span>
-                                <p>{step}</p>
+                        {remoteStepRows.map((row, rowIndex) =>
+                            <div className={`remote-step-row${rowIndex % 2 === 1 ? ' remote-step-row-reverse' : ''}`} key={rowIndex}>
+                                {row.map(([step, icon]) =>
+                                    <article className="remote-step" key={step}>
+                                        <span className="remote-step-icon" aria-hidden="true">{icon}</span>
+                                        <p>{step}</p>
+                                    </article>)}
                             </div>)}
                     </div>
                     <button className="home-button home-button-light" type="button" onClick={() => navigate('/contact')}>Schedule a  consultation <span>&#8599;</span></button>
