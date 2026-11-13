@@ -112,7 +112,7 @@ const faqSchemaData = {
 
 export default function SEO() {
   const { pathname } = useLocation()
-  const siteUrl = 'https://primerealtorsjanaharsha.com'
+  const siteUrl = 'https://prime-realtors.in'
 
   useEffect(() => {
     const meta = routeMetadata[pathname] || routeMetadata['/']

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://primerealtorsjanaharsha.com/sitemap.xml
+Sitemap: https://prime-realtors.in/sitemap.xml
