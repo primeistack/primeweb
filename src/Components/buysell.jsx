@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './buy.css'
-import layoutOverview from '../assets/layout.png'
-import farmhouseImage from '../assets/formhouse.jpeg'
-import weekendImage from '../assets/Weekendtrips.jpeg'
-import farmlandImage from '../assets/farmland.jpeg'
-import futureHomeImage from '../assets/futurehome.jpeg'
+import farmhouseImage from '../assets/formhouse.webp'
+import weekendImage from '../assets/Weekendtrips.webp'
+import farmlandImage from '../assets/farmland.webp'
+import futureHomeImage from '../assets/futurehome.webp'
 import phaseA from '../assets/Layouts/janaharsha-phase-a.pdf'
 import phaseBK from '../assets/Layouts/janaharsha-phase-b-k.pdf'
 import phaseBExtension from '../assets/Layouts/janaharsha-phase-b-ext.pdf'
@@ -224,7 +223,7 @@ function BuySell() {
                         </div>
                         <div className="buy-inspiration-grid" aria-label="Ways to enjoy a plot">
                             {buyInspirationImages.map((image) => <figure key={image.alt}>
-                                <img src={image.src} alt={image.alt} />
+                                <img src={image.src} alt={image.alt} loading="lazy" decoding="async" width="360" height="240" />
                             </figure>)}
                         </div>
                         <div className="plot-plan-grid">
@@ -281,8 +280,8 @@ function BuySell() {
                     </div>
                     <form className="buy-form" onSubmit={(event) => sendToWhatsApp(event, 'buyer')}>
                         <label>Name<input name="ownerName" type="text" autoComplete="name" required /></label>
-                        <label>Contact number<input name="phone" type="tel" autoComplete="tel" required /></label>
-                        <label>Email<input name="email" type="email" autoComplete="email" /></label>
+                        <label>Contact number<input name="phone" type="tel" inputMode="tel" autoComplete="tel" required /></label>
+                        <label>Email<input name="email" type="email" inputMode="email" autoComplete="email" /></label>
                         <label>Preferred locality<select name="location" defaultValue=""><option value="" disabled>Select a locality</option><option>Janaharsha</option><option>Ibrahimpatnam</option><option>Polkampally</option><option>Manneguda</option><option>Raipole</option><option>Naganpally</option></select></label>
                         <label>Plot size<input name="plotSize" type="text" placeholder="e.g. 240 Sq. Yds" /></label>
                         <label>Purpose<select name="purpose" defaultValue=""><option value="" disabled>Select a purpose</option><option>Investment</option><option>Future home</option><option>Farmhouse</option><option>Farm land / plantation</option><option>Weekend retreat</option></select></label>
@@ -301,7 +300,7 @@ function BuySell() {
                 </div>
                 <form className="buy-form" onSubmit={(event) => sendToWhatsApp(event, 'seller')}>
                     <label>Owner name<input name="ownerName" type="text" autoComplete="name" required /></label>
-                    <label>Contact number<input name="phone" type="tel" autoComplete="tel" required /></label>
+                    <label>Contact number<input name="phone" type="tel" inputMode="tel" autoComplete="tel" required /></label>
                     <label>Block<input name="block" type="text" required /></label>
                     <label>Plot number<input name="plotNumber" type="text" required /></label>
                     <label>Plot size<input name="plotSize" type="text" placeholder="e.g. 240 Sq. Yds" required /></label>
@@ -323,8 +322,8 @@ function BuySell() {
                 </div>
                 <form className="buy-form" onSubmit={(event) => sendToWhatsApp(event, 'site visit')}>
                     <label>Name<input name="ownerName" type="text" autoComplete="name" required /></label>
-                    <label>Contact number<input name="phone" type="tel" autoComplete="tel" required /></label>
-                    <label>Email<input name="email" type="email" autoComplete="email" /></label>
+                    <label>Contact number<input name="phone" type="tel" inputMode="tel" autoComplete="tel" required /></label>
+                    <label>Email<input name="email" type="email" inputMode="email" autoComplete="email" /></label>
                     <label>Preferred locality<select name="location" defaultValue=""><option value="" disabled>Select a locality</option><option>Janaharsha</option><option>Ibrahimpatnam</option><option>Polkampally</option><option>Manneguda</option><option>Raipole</option><option>Naganpally</option></select></label>
                     <label>Preferred visit date<input name="visitDate" type="date" required /></label>
                     <label className="buy-form-wide">Additional details<textarea name="notes" rows="3" placeholder="Number of visitors or anything we should know" /></label>

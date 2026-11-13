@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import './Presence.css'
-import layoutImage from '../../assets/layout.png'
+import layoutImage from '../../assets/layout.webp'
 import phaseA from '../../assets/Layouts/janaharsha-phase-a.pdf'
 import phaseBK from '../../assets/Layouts/janaharsha-phase-b-k.pdf'
 import phaseBExtension from '../../assets/Layouts/janaharsha-phase-b-ext.pdf'
@@ -73,7 +73,7 @@ function Presence() {
                         <p>Deep local knowledge across Janaharsha and the surrounding localities, with a growing inventory for different land requirements.</p>
                     </div>
                     <div className="presence-hero-art">
-                        <img src={layoutImage} alt="Janaharsha plotted layout map" />
+                        <img src={layoutImage} alt="Janaharsha plotted layout map" loading="lazy" decoding="async" width="560" height="420" />
                     </div>
                 </div>
             </section>

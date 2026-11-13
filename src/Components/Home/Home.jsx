@@ -1,34 +1,34 @@
 import './Home.css'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import homeHero from '../../assets/Home1.jpg'
-import layoutMap from '../../assets/layout.png'
-import natureImage from '../../assets/nature.jpg'
-import futureplanning from '../../assets/planfuture.jpg'
+import homeHero from '../../assets/Home1.webp'
+import layoutMap from '../../assets/layout.webp'
+import natureImage from '../../assets/nature.webp'
+import futureplanning from '../../assets/planfuture.webp'
 
 // plot possibilities
 
-import farmhouseImage from '../../assets/formhouse.jpeg'
-import weekendImage from '../../assets/Weekendtrips.jpeg'
-import farmlandImage from '../../assets/farmland.jpeg'
-import organicImage from '../../assets/organic.jpeg'
-import plantationImage from '../../assets/plant.jpg'
-import futureHomeImage from '../../assets/futurehome.jpeg'
+import farmhouseImage from '../../assets/formhouse.webp'
+import weekendImage from '../../assets/Weekendtrips.webp'
+import farmlandImage from '../../assets/farmland.webp'
+import organicImage from '../../assets/organic.webp'
+import plantationImage from '../../assets/plant.webp'
+import futureHomeImage from '../../assets/futurehome.webp'
 
 
 // near by attractions
-import RamjoiImage from '../../assets/NearBy/Ramoji.jpeg'
-import Cbse from '../../assets/NearBy/CBSE.jpeg'
-import Park from '../../assets/NearBy/Park.jpeg'
-import Sangitemple from '../../assets/NearBy/sangitemple.jpeg'
-import sivalayyam from '../../assets/NearBy/sivalayyam.jpeg'
-import wonderla from '../../assets/NearBy/wonderla.jpeg'
-import LBNagar from '../../assets/NearBy/Lbnagar.jpeg'
-import Koheda from '../../assets/NearBy/Koheda.jpeg'
-import octopus from '../../assets/NearBy/octopus.jpeg'
-import gandhrava from '../../assets/NearBy/gandhrvaresort.jpeg'
-import mountopera from '../../assets/NearBy/mountopera.jpeg'
-import park1 from '../../assets/NearBy/Park1.jpeg'
+import RamjoiImage from '../../assets/NearBy/Ramoji.webp'
+import Cbse from '../../assets/NearBy/CBSE.webp'
+import Park from '../../assets/NearBy/Park.webp'
+import Sangitemple from '../../assets/NearBy/sangitemple.webp'
+import sivalayyam from '../../assets/NearBy/sivalayyam.webp'
+import wonderla from '../../assets/NearBy/wonderla.webp'
+import LBNagar from '../../assets/NearBy/Lbnagar.webp'
+import Koheda from '../../assets/NearBy/Koheda.webp'
+import octopus from '../../assets/NearBy/octopus.webp'
+import gandhrava from '../../assets/NearBy/gandhrvaresort.webp'
+import mountopera from '../../assets/NearBy/mountopera.webp'
+import park1 from '../../assets/NearBy/Park1.webp'
 
 
 const plotUses = [
@@ -153,7 +153,7 @@ function Home() {
                     <article className="possibility-card" key={title}>
                         {/* <span>0{index + 1}</span> */}
                         <div className='possi-blii-image'>
-                            <img src={possibilityImages[title]} alt={`${title} land use`} className='possibl-image' />
+                            <img src={possibilityImages[title]} alt={`${title} land use`} className='possibl-image' loading="lazy" decoding="async" width="360" height="240" />
                         </div>
                         <div className="posible-card-cont">
                             <h3>{title}</h3>
@@ -180,7 +180,7 @@ function Home() {
                         </div>
                     </div>
                     <div className="janaharsha-art" aria-label="Illustration of a farmhouse plot near Hyderabad">
-                       <img src={homeHero} alt="Aerial view of Janaharsha plotted landscape with roads and greenery" />
+                       <img src={homeHero} alt="Aerial view of Janaharsha plotted landscape with roads and greenery" fetchPriority="high" decoding="async" width="600" height="340" />
                     </div>
                 </div>
             </section>
@@ -197,8 +197,8 @@ function Home() {
                             {nearbyAttractions.map((item) => (
                                 <div className={`attraction-pill ${item.tone}`} key={item.title}>
                                     <span className="attraction-icon" aria-hidden="true"> 
-                                          {typeof item.icon === 'string' && item.icon.startsWith('/') ? (
-                                                <img src={item.icon} alt={item.title} />
+                                          {typeof item.icon === 'string' && (item.icon.startsWith('/') || item.icon.includes('/')) ? (
+                                                <img src={item.icon} alt={item.title} loading="lazy" decoding="async" width="280" height="180" />
                                             ) : (
                                                 item.icon
                                             )}
@@ -265,14 +265,14 @@ function Home() {
                     <p>Land does not always need to be developed immediately. A plot purchased today can be planned gradually over the next 8-12 years and beyond, based on your family&apos;s requirements.</p><p>Buy a piece of land today and give your family the freedom to decide what it becomes tomorrow.</p>
                 </div>
                   <div className="future-copy">
-                    <img src={futureplanning} alt="future-plan" className='future-paln-img' />
+                    <img src={futureplanning} alt="Strategic future planning for Janaharsha land ownership" className='future-paln-img' loading="lazy" decoding="async" width="540" height="360" />
                 </div>
             </section>
             {/* Nature Plan */}
             <section className="nature-section">
                 <div className="content-width nature-row">
                     <div className="nature-art">
-                       <img src={natureImage} alt="Green agricultural landscape with a field and trees" className="nature-image" />
+                       <img src={natureImage} alt="Green agricultural landscape with a field and trees" className="nature-image" loading="lazy" decoding="async" width="540" height="360" />
                     </div>
                     <div className="nature-copy">
                         <p className="home-eyebrow">A landscape years in the making</p>
@@ -311,7 +311,7 @@ function Home() {
                     </div>
                     <div className="locality-map-board">
                         <button className="locality-map-trigger" type="button" onClick={() => setIsLayoutOpen(true)} aria-label="Open Janaharsha layout map">
-                            <img src={layoutMap} alt="Janaharsha layout map preview" />
+                            <img src={layoutMap} alt="Janaharsha layout map preview" loading="lazy" decoding="async" width="600" height="440" />
                             <span className="locality-map-trigger-copy"><strong>View layout map</strong><small>Click to explore connectivity</small></span>
                             <span className="locality-map-trigger-icon" aria-hidden="true">&#8599;</span>
                         </button>
@@ -320,7 +320,7 @@ function Home() {
                         <button className="layout-modal-backdrop" type="button" onClick={() => setIsLayoutOpen(false)} aria-label="Close layout map" />
                         <div className="layout-modal-content">
                             <div className="layout-modal-header"><div><span>Janaharsha layout</span><small>Location guide · Not to scale</small></div><button type="button" onClick={() => setIsLayoutOpen(false)} aria-label="Close layout map">&#10005;</button></div>
-                            <img src={layoutMap} alt="Janaharsha layout map showing nearby roads, blocks and landmarks" />
+                            <img src={layoutMap} alt="Janaharsha layout map showing nearby roads, blocks and landmarks" loading="lazy" decoding="async" width="1200" height="880" />
                         </div>
                     </div>}
                     <div className="locality-list">

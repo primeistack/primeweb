@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import './Gallery.css'
-import aImage from '../../assets/Gallery/a.jpeg'
-import bImage from '../../assets/Gallery/B.jpeg'
-import dreamCityImage from '../../assets/Gallery/dreamcity.jpeg'
-import homeImage from '../../assets/Gallery/home.jpeg'
-import lakeImage from '../../assets/Gallery/lake.jpeg'
-import layoutImage from '../../assets/Gallery/layout.jpeg'
-import parkImage from '../../assets/Gallery/park.jpeg'
-import parkOneImage from '../../assets/Gallery/park1.jpeg'
-import parkTwoImage from '../../assets/Gallery/park2.jpeg'
-import viewImage from '../../assets/Gallery/view.jpeg'
-import waterTankImage from '../../assets/Gallery/watertank.jpeg'
+import aImage from '../../assets/Gallery/a.webp'
+import bImage from '../../assets/Gallery/B.webp'
+import dreamCityImage from '../../assets/Gallery/dreamcity.webp'
+import homeImage from '../../assets/Gallery/home.webp'
+import lakeImage from '../../assets/Gallery/lake.webp'
+import layoutImage from '../../assets/Gallery/layout.webp'
+import parkImage from '../../assets/Gallery/park.webp'
+import parkOneImage from '../../assets/Gallery/park1.webp'
+import parkTwoImage from '../../assets/Gallery/park2.webp'
+import viewImage from '../../assets/Gallery/view.webp'
+import waterTankImage from '../../assets/Gallery/watertank.webp'
 
 const galleryItems = [
     { image: dreamCityImage, title: 'Dream City', category: 'Community' },
@@ -49,7 +49,7 @@ function Gallery() {
                 <div className="gallery-grid">
                     {galleryItems.map((item, index) => (
                         <button className={`gallery-card gallery-card-${index + 1}`} type="button" key={item.title} onClick={() => setSelectedImage(item)}>
-                            <img src={item.image} alt={item.title} />
+                            <img src={item.image} alt={item.title} loading="lazy" decoding="async" width="400" height="300" />
                             <span className="gallery-card-overlay">
                                 <small>{item.category}</small>
                                 <strong>{item.title}</strong>

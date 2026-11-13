@@ -99,10 +99,10 @@ function Contact() {
                     <form className="contact-form" onSubmit={submitContactForm}>
                         <p className="contact-eyebrow-">Send an enquiry</p>
                         <h2>Tell us a little about <em>you.</em></h2>
-                        <label>Name<input name="name" type="text" placeholder="Your full name" required /></label>
-                        <label>Phone<input name="phone" type="tel" placeholder="Your phone number" required /></label>
-                        <label>Email<input name="email" type="email" placeholder="Your email address" required /></label>
-                        <label>Address<textarea name="address" rows="3" placeholder="Your address or preferred location" required /></label>
+                        <label htmlFor="contact-name">Name<input id="contact-name" name="name" type="text" placeholder="Your full name" autoComplete="name" required /></label>
+                        <label htmlFor="contact-phone">Phone<input id="contact-phone" name="phone" type="tel" inputMode="tel" placeholder="Your phone number" autoComplete="tel" required /></label>
+                        <label htmlFor="contact-email">Email<input id="contact-email" name="email" type="email" inputMode="email" placeholder="Your email address" autoComplete="email" required /></label>
+                        <label htmlFor="contact-address">Address<textarea id="contact-address" name="address" rows="3" placeholder="Your address or preferred location" autoComplete="street-address" required /></label>
                         <button className="contact-form-submit" type="submit">Submit Enquiry <span aria-hidden="true">&#8599;</span></button>
                     </form>
             </div>

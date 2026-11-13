@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './Header.css'
-import logo from '../../assets/Logo.png'
+import logo from '../../assets/Logo.webp'
 const navItems = [
 	{ label: 'Home', href: '/' },
 	{ label: 'Our Presence', href: '/our-presence' },
@@ -29,7 +29,7 @@ function Header() {
 		<header className={`site-header ${isMenuOpen ? 'menu-open' : ''}`}>
 			<div className="header-inner">
 				<button className="brand" type="button" onClick={() => goTo('/')} aria-label="Prime Realtors home">
-					<img className="header-logo" src={logo} alt="Prime Realtors" />
+					<img className="header-logo" src={logo} alt="Prime Realtors" width="160" height="51" fetchPriority="high" decoding="async" />
 				</button>
 				<nav id="primary-navigation" className={`primary-navigation ${isMenuOpen ? 'is-open' : ''}`}>
 					{navItems.map((item) => <button className={isActive(item.href) ? 'is-active' : ''} key={item.label} type="button" onClick={() => goTo(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</button>)}
