@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getStoredBlogs, saveStoredBlogs, initialBlogs } from '../../data/blogs.js'
+import { getStoredBlogs, saveStoredBlogs, initialBlogs, fetchBlogsFromSupabase, saveBlogToSupabase } from '../../data/blogs.js'
 import BlogPost from '../Blog/BlogPost.jsx'
 import TiptapEditor from './TiptapEditor.jsx'
 import './AdminPortal.css'
@@ -71,12 +71,15 @@ export default function AdminPortal() {
 
   // Load stored blogs on mount
   useEffect(() => {
-    const stored = getStoredBlogs()
-    setBlogsList(stored)
-    if (stored.length > 0) {
-      setActivePostId(stored[0].id || stored[0].slug)
-      setDraft(JSON.parse(JSON.stringify(stored[0])))
+    async function load() {
+      const stored = await fetchBlogsFromSupabase()
+      setBlogsList(stored)
+      if (stored.length > 0) {
+        setActivePostId(stored[0].id || stored[0].slug)
+        setDraft(JSON.parse(JSON.stringify(stored[0])))
+      }
     }
+    load()
   }, [])
 
   // Handle Login with SHA-256
@@ -157,21 +160,30 @@ export default function AdminPortal() {
     })
   }
 
-  // Save changes
-  const handleSave = () => {
-    const updated = [...blogsList]
-    const existingIndex = updated.findIndex((b) => b.id === draft.id || b.slug === draft.slug)
+  // Save changes to Supabase cloud database
+  const handleSave = async () => {
+    setSaveStatus('Saving to Supabase...')
+    try {
+      await saveBlogToSupabase(draft)
+      setSaveStatus('✓ Published to Cloud! Live worldwide instantly.')
+      const fresh = await fetchBlogsFromSupabase()
+      setBlogsList(fresh)
+    } catch (err) {
+      console.warn('Could not save to Supabase cloud, saving locally:', err)
+      const updated = [...blogsList]
+      const existingIndex = updated.findIndex((b) => b.id === draft.id || b.slug === draft.slug)
 
-    if (existingIndex >= 0) {
-      updated[existingIndex] = draft
-    } else {
-      updated.unshift(draft)
+      if (existingIndex >= 0) {
+        updated[existingIndex] = draft
+      } else {
+        updated.unshift(draft)
+      }
+
+      setBlogsList(updated)
+      saveStoredBlogs(updated)
+      setSaveStatus('✓ Saved locally (Check Supabase table creation).')
     }
-
-    setBlogsList(updated)
-    saveStoredBlogs(updated)
-    setSaveStatus('✓ Saved successfully! Updated in site state.')
-    setTimeout(() => setSaveStatus(''), 4000)
+    setTimeout(() => setSaveStatus(''), 5000)
   }
 
   // Copy JSON

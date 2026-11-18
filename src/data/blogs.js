@@ -1,5 +1,6 @@
 import heroImage from '../assets/blog/why-investing-open-plots-hyderabad.webp'
 import lifestyleImage from '../assets/blog/open-plots-lifestyle-hyderabad.webp'
+import { supabase } from './supabaseClient.js'
 
 export const initialBlogs = [
   {
@@ -180,4 +181,78 @@ export const saveStoredBlogs = (blogs) => {
   } catch (e) {
     console.error('Failed to save blogs to localStorage', e)
   }
+}
+
+// Fetch live blogs from Supabase with instant offline/local fallback
+export async function fetchBlogsFromSupabase() {
+  try {
+    const { data, error } = await supabase
+      .from('blogs')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!error && data && data.length > 0) {
+      return data.map((b) => ({
+        id: b.id,
+        slug: b.slug,
+        title: b.title,
+        subtitle: b.subtitle,
+        author: b.author,
+        category: b.category,
+        date: b.date,
+        readTime: b.read_time,
+        heroImage: b.hero_image,
+        summary: b.summary,
+        contentHtml: b.content_html,
+        faqs: b.faqs || [],
+        comparisonTable: b.comparison_table,
+      }))
+    }
+  } catch (err) {
+    console.warn('Supabase fetch returned error, using fallback:', err)
+  }
+  return getStoredBlogs()
+}
+
+// Save or Update a blog post directly to Supabase cloud database
+export async function saveBlogToSupabase(blog) {
+  const payload = {
+    id: blog.id || blog.slug,
+    slug: blog.slug,
+    title: blog.title,
+    subtitle: blog.subtitle || '',
+    author: blog.author || 'Prime Realtors Team',
+    category: blog.category || 'Land Investment Guide',
+    date: blog.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    read_time: blog.readTime || '7 min read',
+    hero_image: typeof blog.heroImage === 'string' && blog.heroImage.startsWith('data:') 
+      ? '/blog/why-investing-open-plots-hyderabad.webp' 
+      : (blog.heroImage || '/blog/why-investing-open-plots-hyderabad.webp'),
+    summary: blog.summary || '',
+    content_html: blog.contentHtml || '',
+    faqs: blog.faqs || [],
+    comparison_table: blog.comparisonTable || null,
+  }
+
+  const { data, error } = await supabase
+    .from('blogs')
+    .upsert(payload, { onConflict: 'slug' })
+    .select()
+
+  if (error) {
+    console.error('Supabase upsert error:', error)
+    throw error
+  }
+
+  // Also update local storage cache
+  const localList = getStoredBlogs()
+  const existingIdx = localList.findIndex((b) => b.slug === blog.slug || b.id === blog.id)
+  if (existingIdx >= 0) {
+    localList[existingIdx] = blog
+  } else {
+    localList.unshift(blog)
+  }
+  saveStoredBlogs(localList)
+
+  return data
 }

@@ -1,10 +1,11 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './NewsUpdate.css'
 import heroImage from '../../assets/Home1.jpg'
 import layoutImage from '../../assets/Gallery/layout.jpeg'
 import greeneryImage from '../../assets/Gallery/park.jpeg'
 import siteImage from '../../assets/Gallery/view.jpeg'
-import { getStoredBlogs } from '../../data/blogs.js'
+import { getStoredBlogs, fetchBlogsFromSupabase } from '../../data/blogs.js'
 
 const updates = [
     {
@@ -38,7 +39,14 @@ const updates = [
 
 function NewsUpdate() {
     const navigate = useNavigate()
-    const blogs = getStoredBlogs()
+    const [blogs, setBlogs] = useState(() => getStoredBlogs())
+
+    useEffect(() => {
+        fetchBlogsFromSupabase().then((data) => {
+            if (data && data.length > 0) setBlogs(data)
+        })
+    }, [])
+
     const featuredBlog = blogs[0]
 
     return (

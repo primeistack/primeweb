@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { getStoredBlogs } from '../../data/blogs.js'
+import { getStoredBlogs, fetchBlogsFromSupabase } from '../../data/blogs.js'
 import './BlogPost.css'
 
 export default function BlogPost({ previewPost }) {
@@ -9,15 +9,24 @@ export default function BlogPost({ previewPost }) {
   const [openFaq, setOpenFaq] = useState(null)
   const [copied, setCopied] = useState(false)
 
-  // Support either previewPost passed from Admin or lookup by slug from route
-  const post = previewPost || (() => {
+  // Support either previewPost passed from Admin or lookup by slug from route or Supabase
+  const [post, setPost] = useState(() => {
+    if (previewPost) return previewPost
     const blogs = getStoredBlogs()
     return blogs.find((b) => b.slug === slug || b.id === slug) || blogs[0]
-  })()
+  })
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
-  }, [slug])
+    if (previewPost) {
+      setPost(previewPost)
+      return
+    }
+    fetchBlogsFromSupabase().then((blogs) => {
+      const found = blogs.find((b) => b.slug === slug || b.id === slug)
+      if (found) setPost(found)
+    })
+  }, [slug, previewPost])
 
   if (!post) {
     return (
