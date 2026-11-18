@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { getStoredBlogs } from '../../data/blogs.js'
 
 const routeMetadata = {
   '/': {
@@ -55,7 +56,7 @@ const routeMetadata = {
   },
 }
 
-const faqSchemaData = {
+const defaultFaqSchemaData = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   'mainEntity': [
@@ -115,7 +116,30 @@ export default function SEO() {
   const siteUrl = 'https://prime-realtors.in'
 
   useEffect(() => {
-    const meta = routeMetadata[pathname] || routeMetadata['/']
+    let meta = routeMetadata[pathname]
+
+    // Check for dynamic blog post
+    if (!meta && (pathname.startsWith('/news-update/') || pathname.startsWith('/blog/'))) {
+      const slug = pathname.replace(/^\/(news-update|blog)\//, '')
+      const blogs = getStoredBlogs()
+      const blog = blogs.find((b) => b.slug === slug || b.id === slug)
+
+      if (blog) {
+        meta = {
+          title: `${blog.title} | Prime Realtors`,
+          description: blog.metaDescription || blog.summary || 'Expert real estate advice from Prime Realtors.',
+          path: pathname,
+          image: typeof blog.heroImage === 'string' && blog.heroImage.startsWith('http') 
+            ? blog.heroImage 
+            : `${siteUrl}/blog/why-investing-open-plots-hyderabad.webp`,
+          isBlog: true,
+          blogData: blog,
+        }
+      }
+    }
+
+    if (!meta) meta = routeMetadata['/']
+
     const fullUrl = `${siteUrl}${meta.path === '/' ? '' : meta.path}`
 
     // Update document title
@@ -138,6 +162,11 @@ export default function SEO() {
     setMetaTag('meta[property="og:title"]', 'og:title', meta.title)
     setMetaTag('meta[property="og:description"]', 'og:description', meta.description)
     setMetaTag('meta[property="og:url"]', 'og:url', fullUrl)
+    setMetaTag('meta[property="og:type"]', 'og:type', meta.isBlog ? 'article' : 'website')
+    if (meta.image) {
+      setMetaTag('meta[property="og:image"]', 'og:image', meta.image)
+      setMetaTag('meta[name="twitter:image"]', 'twitter:image', meta.image)
+    }
     setMetaTag('meta[name="twitter:title"]', 'twitter:title', meta.title)
     setMetaTag('meta[name="twitter:description"]', 'twitter:description', meta.description)
     setMetaTag('meta[name="twitter:url"]', 'twitter:url', fullUrl)
@@ -153,16 +182,73 @@ export default function SEO() {
 
     // Dynamic FAQ Schema injection
     let existingFaqScript = document.getElementById('faq-schema-jsonld')
-    if (meta.schemaType === 'FAQPage') {
+    if (meta.schemaType === 'FAQPage' || (meta.isBlog && meta.blogData?.faqs?.length)) {
+      const faqData = meta.isBlog && meta.blogData?.faqs?.length ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': meta.blogData.faqs.map((f) => ({
+          '@type': 'Question',
+          'name': f.question,
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': f.answer,
+          },
+        })),
+      } : defaultFaqSchemaData
+
       if (!existingFaqScript) {
         const script = document.createElement('script')
         script.id = 'faq-schema-jsonld'
         script.type = 'application/ld+json'
-        script.textContent = JSON.stringify(faqSchemaData)
+        script.textContent = JSON.stringify(faqData)
         document.head.appendChild(script)
+      } else {
+        existingFaqScript.textContent = JSON.stringify(faqData)
       }
     } else if (existingFaqScript) {
       existingFaqScript.remove()
+    }
+
+    // Dynamic BlogPosting Schema injection
+    let existingBlogScript = document.getElementById('blogposting-schema-jsonld')
+    if (meta.isBlog && meta.blogData) {
+      const blogPostingSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': meta.blogData.title,
+        'description': meta.blogData.metaDescription || meta.blogData.summary,
+        'image': meta.image || `${siteUrl}/blog/why-investing-open-plots-hyderabad.webp`,
+        'author': {
+          '@type': 'Organization',
+          'name': meta.blogData.author || 'Prime Realtors',
+          'url': siteUrl,
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Prime Realtors',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': `${siteUrl}/Logo.webp`,
+          },
+        },
+        'datePublished': '2026-11-18',
+        'mainEntityOfPage': {
+          '@type': 'WebPage',
+          '@id': fullUrl,
+        },
+      }
+
+      if (!existingBlogScript) {
+        const script = document.createElement('script')
+        script.id = 'blogposting-schema-jsonld'
+        script.type = 'application/ld+json'
+        script.textContent = JSON.stringify(blogPostingSchema)
+        document.head.appendChild(script)
+      } else {
+        existingBlogScript.textContent = JSON.stringify(blogPostingSchema)
+      }
+    } else if (existingBlogScript) {
+      existingBlogScript.remove()
     }
   }, [pathname])
 

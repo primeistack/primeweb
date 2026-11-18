@@ -4,6 +4,7 @@ import heroImage from '../../assets/Home1.jpg'
 import layoutImage from '../../assets/Gallery/layout.jpeg'
 import greeneryImage from '../../assets/Gallery/park.jpeg'
 import siteImage from '../../assets/Gallery/view.jpeg'
+import { getStoredBlogs } from '../../data/blogs.js'
 
 const updates = [
     {
@@ -37,35 +38,112 @@ const updates = [
 
 function NewsUpdate() {
     const navigate = useNavigate()
+    const blogs = getStoredBlogs()
+    const featuredBlog = blogs[0]
 
     return (
         <main className="news-page">
             <section className="news-hero">
                 <div className="news-hero-copy">
-                    <p className="news-eyebrow">Prime Realtors · Janaharsha</p>
+                    <p className="news-eyebrow">Prime Realtors · Insights & News</p>
                     <h1>News from<br /><em>the landscape.</em></h1>
-                    <p>Project views, plot plan guidance and updates from the Janaharsha community.</p>
-                    {/* <a href="https://www.instagram.com/primerealtorsjanaharsha/" target="_blank" rel="noreferrer" className="news-social-link">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.8" r=".8" /></svg>
-                        Follow our updates <span aria-hidden="true">&#8599;</span>
-                    </a> */}
+                    <p>In-depth property investment guides, master plan developments, and updates from Prime Realtors Janaharsha.</p>
                 </div>
                 <div className="news-hero-image">
                     <img src={heroImage} alt="Aerial view of Janaharsha plotted landscape and roads" />
                     <span>Janaharsha · Hyderabad</span>
                 </div>
             </section>
-            
-                    
-{/* 
+
+            {/* Featured Lead Blog Article */}
+            {featuredBlog && (
+                <section className="news-featured-section">
+                    <div className="news-featured-card">
+                        <div className="news-featured-media">
+                            <img src={featuredBlog.heroImage} alt={featuredBlog.heroImageAlt || featuredBlog.title} />
+                            <span className="news-featured-badge">{featuredBlog.category}</span>
+                        </div>
+                        <div className="news-featured-content">
+                            <div className="news-featured-meta">
+                                <span>{featuredBlog.date}</span>
+                                <span>·</span>
+                                <span>{featuredBlog.readTime}</span>
+                                <span>·</span>
+                                <span>By {featuredBlog.author}</span>
+                            </div>
+                            <h2>{featuredBlog.title}</h2>
+                            <p>{featuredBlog.summary}</p>
+                            <div className="news-featured-actions">
+                                <button 
+                                    type="button" 
+                                    className="news-read-btn"
+                                    onClick={() => navigate(`/news-update/${featuredBlog.slug}`)}
+                                >
+                                    Read Complete Guide <span aria-hidden="true">→</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Additional Articles & Project Highlights */}
+            <section className="news-listing">
+                <div className="news-listing-heading">
+                    <div>
+                        <p className="news-eyebrow">Explore More</p>
+                        <h2>Plot planning &amp;<br /><em>site opportunities.</em></h2>
+                    </div>
+                    <p>Guidance on boundaries, site visits, and surrounding amenities across Janaharsha and Ibrahimpatnam.</p>
+                </div>
+
+                <div className="news-card-list">
+                    {blogs.slice(1).map((blog, idx) => (
+                        <article className="news-card" key={blog.id || idx}>
+                            <div className="news-card-image">
+                                <span className="news-card-number">{idx + 2}</span>
+                                <img src={blog.heroImage} alt={blog.title} />
+                            </div>
+                            <div className="news-card-copy">
+                                <p className="news-card-category">{blog.category}</p>
+                                <h3>{blog.title}</h3>
+                                <p>{blog.summary}</p>
+                                <button type="button" onClick={() => navigate(`/news-update/${blog.slug}`)}>
+                                    Read Article <span aria-hidden="true">&#8599;</span>
+                                </button>
+                            </div>
+                        </article>
+                    ))}
+
+                    {updates.map((item, idx) => (
+                        <article className="news-card" key={idx}>
+                            <div className="news-card-image">
+                                <span className="news-card-number">{blogs.length + idx}</span>
+                                <img src={item.image} alt={item.alt} />
+                            </div>
+                            <div className="news-card-copy">
+                                <p className="news-card-category">{item.category}</p>
+                                <h3>{item.title}</h3>
+                                <p>{item.copy}</p>
+                                <button type="button" onClick={() => navigate(item.href)}>
+                                    {item.action} <span aria-hidden="true">&#8599;</span>
+                                </button>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
             <section className="news-contact-band">
                 <div>
                     <p className="news-eyebrow">Have a question?</p>
                     <h2>Get the details<br /><em>that matter to you.</em></h2>
                 </div>
                 <p>Talk with the Prime Realtors team about plot plans, locality or arranging a visit.</p>
-                <button type="button" onClick={() => navigate('/contact')}>Contact Prime Realtors<span aria-hidden="true">&#8599;</span></button>
-            </section> */}
+                <button type="button" onClick={() => navigate('/contact')}>
+                    Contact Prime Realtors<span aria-hidden="true">&#8599;</span>
+                </button>
+            </section>
         </main>
     )
 }

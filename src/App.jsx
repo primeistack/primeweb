@@ -14,6 +14,8 @@ const BuySell = lazy(() => import('./Components/buysell.jsx'))
 const ThankYou = lazy(() => import('./Components/ThankYou/ThankYou.jsx'))
 const Gallery = lazy(() => import('./Components/Gallery/Gallery.jsx'))
 const NewsUpdate = lazy(() => import('./Components/NewsUpdate/NewsUpdate.jsx'))
+const BlogPost = lazy(() => import('./Components/Blog/BlogPost.jsx'))
+const AdminPortal = lazy(() => import('./Components/Admin/AdminPortal.jsx'))
 const FAQs = lazy(() => import('./Components/FAQs/FAQs.jsx'))
 const PrivacyPolicy = lazy(() => import('./Components/PrivacyPolicy/PrivacyPolicy.jsx'))
 const TermsAndConditions = lazy(() => import('./Components/TermsAndConditions/TermsAndConditions.jsx'))
@@ -31,17 +33,20 @@ function ScrollToTop() {
 function RouteLoading() {
   return (
     <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '3px solid #dce5d6', borderTopColor: '#275b3b', animation: 'spin 0.8s linear infinite' }} />
+      <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '3px solid #dce5d7', borderTopColor: '#275b3b', animation: 'spin 0.8s linear infinite' }} />
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }
 
 function App() {
+  const location = useLocation()
+  const isAdmin = location.pathname.startsWith('/admin')
+
   return (
     <div className="app-shell">
-      <SEO />
-      <Header />
+      {!isAdmin && <SEO />}
+      {!isAdmin && <Header />}
       <ScrollToTop />
       <Suspense fallback={<RouteLoading />}>
         <Routes>
@@ -50,6 +55,9 @@ function App() {
           <Route path="/buy-sell" element={<BuySell />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/news-update" element={<NewsUpdate />} />
+          <Route path="/news-update/:slug" element={<BlogPost />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/admin" element={<AdminPortal />} />
           <Route path="/thank-you" element={<ThankYou />} />
           <Route path="/faqs" element={<FAQs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -57,7 +65,7 @@ function App() {
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
-      <Footer />
+      {!isAdmin && <Footer />}
     </div>
   )
 }
