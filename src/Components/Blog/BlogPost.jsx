@@ -56,6 +56,47 @@ export default function BlogPost({ previewPost }) {
     }
   }
 
+  // Extract Table of Contents items from sections or contentHtml
+  const tocItems = (() => {
+    if (post.sections && post.sections.length > 0) {
+      return post.sections.map((sec, idx) => ({
+        id: `section-${idx}`,
+        title: sec.heading.replace(/^\d+\.\s*/, '')
+      }))
+    }
+    if (post.contentHtml) {
+      const regex = /<h2[^>]*id=["']([^"']+)["'][^>]*>(.*?)<\/h2>/gi
+      const items = []
+      let match
+      while ((match = regex.exec(post.contentHtml)) !== null) {
+        const id = match[1]
+        const title = match[2].replace(/<[^>]+>/g, '').replace(/^\d+\.\s*/, '').trim()
+        items.push({ id, title })
+      }
+      if (items.length > 0) return items
+
+      // Fallback regex if ids not explicitly present in HTML
+      const regexNoId = /<h2[^>]*>(.*?)<\/h2>/gi
+      let idx = 0
+      while ((match = regexNoId.exec(post.contentHtml)) !== null) {
+        const title = match[1].replace(/<[^>]+>/g, '').replace(/^\d+\.\s*/, '').trim()
+        items.push({ id: `section-${idx++}`, title })
+      }
+      return items
+    }
+    return []
+  })()
+
+  // Ensure h2 tags in contentHtml have matching section ids for smooth TOC jump
+  const formattedContentHtml = (() => {
+    if (!post.contentHtml) return ''
+    let idx = 0
+    return post.contentHtml.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
+      if (attrs.includes('id=')) return match
+      return `<h2${attrs} id="section-${idx++}">${text}</h2>`
+    })
+  })()
+
   return (
     <main className="blog-post-page">
       {/* Hero Header */}
@@ -120,9 +161,9 @@ export default function BlogPost({ previewPost }) {
         <aside className="blog-sidebar">
           <div className="blog-toc-title">In This Article</div>
           <nav className="blog-toc-list">
-            {post.sections && post.sections.map((sec, idx) => (
-              <a key={idx} href={`#section-${idx}`}>
-                {sec.heading.replace(/^\d+\.\s*/, '')}
+            {tocItems.map((item, idx) => (
+              <a key={idx} href={`#${item.id}`}>
+                {item.title}
               </a>
             ))}
             {post.comparisonTable && (
@@ -156,7 +197,7 @@ export default function BlogPost({ previewPost }) {
           {post.contentHtml ? (
             <div 
               className="blog-body-rich" 
-              dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
+              dangerouslySetInnerHTML={{ __html: formattedContentHtml }} 
             />
           ) : (
             post.sections && post.sections.map((sec, idx) => {

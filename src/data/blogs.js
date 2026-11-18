@@ -192,21 +192,26 @@ export async function fetchBlogsFromSupabase() {
       .order('created_at', { ascending: false })
 
     if (!error && data && data.length > 0) {
-      return data.map((b) => ({
-        id: b.id,
-        slug: b.slug,
-        title: b.title,
-        subtitle: b.subtitle,
-        author: b.author,
-        category: b.category,
-        date: b.date,
-        readTime: b.read_time,
-        heroImage: b.hero_image,
-        summary: b.summary,
-        contentHtml: b.content_html,
-        faqs: b.faqs || [],
-        comparisonTable: b.comparison_table,
-      }))
+      return data.map((b) => {
+        const fallback = initialBlogs.find((ib) => ib.slug === b.slug || ib.id === b.id)
+        return {
+          id: b.id,
+          slug: b.slug,
+          title: b.title,
+          subtitle: b.subtitle || fallback?.subtitle || '',
+          author: b.author || fallback?.author || 'Prime Realtors Team',
+          category: b.category || fallback?.category || 'Land Investment Guide',
+          date: b.date || fallback?.date || 'November 18, 2026',
+          readTime: b.read_time || fallback?.readTime || '8 min read',
+          heroImage: b.hero_image || fallback?.heroImage || '/blog/why-investing-open-plots-hyderabad.webp',
+          secondaryImage: b.secondary_image || fallback?.secondaryImage || '/blog/open-plots-lifestyle-hyderabad.webp',
+          summary: b.summary || fallback?.summary || '',
+          contentHtml: b.content_html || fallback?.contentHtml || '',
+          sections: b.sections && b.sections.length > 0 ? b.sections : (fallback?.sections || []),
+          faqs: b.faqs && b.faqs.length > 0 ? b.faqs : (fallback?.faqs || []),
+          comparisonTable: b.comparison_table || fallback?.comparisonTable || null,
+        }
+      })
     }
   } catch (err) {
     console.warn('Supabase fetch returned error, using fallback:', err)
@@ -224,7 +229,7 @@ export async function saveBlogToSupabase(blog) {
     author: blog.author || 'Prime Realtors Team',
     category: blog.category || 'Land Investment Guide',
     date: blog.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-    read_time: blog.readTime || '7 min read',
+    read_time: blog.readTime || '8 min read',
     hero_image: typeof blog.heroImage === 'string' && blog.heroImage.startsWith('data:') 
       ? '/blog/why-investing-open-plots-hyderabad.webp' 
       : (blog.heroImage || '/blog/why-investing-open-plots-hyderabad.webp'),

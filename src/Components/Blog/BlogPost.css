@@ -250,6 +250,7 @@
   border-top: 1px solid #edf2e8;
   font-weight: 400;
   line-height: 1.25;
+  scroll-margin-top: 100px;
 }
 
 .blog-body h2:first-of-type {
