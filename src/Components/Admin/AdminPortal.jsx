@@ -2,7 +2,40 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getStoredBlogs, saveStoredBlogs, initialBlogs } from '../../data/blogs.js'
 import BlogPost from '../Blog/BlogPost.jsx'
+import TiptapEditor from './TiptapEditor.jsx'
 import './AdminPortal.css'
+
+function convertSectionsToHtml(sections) {
+  if (!sections || !Array.isArray(sections)) return '<p>Start writing your blog post...</p>'
+  return sections
+    .map((s) => {
+      const heading = s.heading ? `<h2>${s.heading}</h2>` : ''
+      const paras = (s.content || '')
+        .split('\n\n')
+        .map((p) => {
+          if (p.startsWith('* ') || p.startsWith('- ')) {
+            const items = p
+              .split('\n')
+              .filter(Boolean)
+              .map((item) => `<li>${item.replace(/^[*-\s]+/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`)
+              .join('')
+            return `<ul>${items}</ul>`
+          }
+          if (/^\d+\.\s/.test(p)) {
+            const items = p
+              .split('\n')
+              .filter(Boolean)
+              .map((item) => `<li>${item.replace(/^\d+\.\s*/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`)
+              .join('')
+            return `<ol>${items}</ol>`
+          }
+          return `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>`
+        })
+        .join('')
+      return `${heading}${paras}`
+    })
+    .join('')
+}
 
 // SHA-256 hash of complex password "PR#Janaharsha@2026!Secure"
 const ADMIN_HASH = '88ce3017f2b7af057f65691b21c3c912925df4b53fb374f0fc2cf5f685c66d73'
@@ -484,63 +517,23 @@ export default function AdminPortal() {
                 </div>
               </div>
 
-              {/* Rich Content Sections with WYSIWYG Toolbar */}
+              {/* Modern Tiptap Document Editor */}
               <div className="admin-section-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                  <h3 style={{ margin: 0 }}>3. Article Sections (Rich Editor)</h3>
-                  <button type="button" className="admin-tool-btn" onClick={handleAddSection}>
-                    + Add Section
-                  </button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h3 style={{ margin: 0 }}>3. Article Body (Visual Tiptap Document Editor)</h3>
+                  <span style={{ fontSize: '11px', background: '#254b33', color: '#c6df9c', padding: '3px 8px', borderRadius: '4px', fontWeight: 'bold' }}>
+                    Tiptap WYSIWYG
+                  </span>
                 </div>
+                <p style={{ fontSize: '13px', color: '#55665a', margin: '0 0 16px' }}>
+                  Write and format your entire article naturally with the top toolbar (Headings, Bold, Lists, Quotes, Links, Images). Real-time preview updates on the right!
+                </p>
 
-                {draft.sections && draft.sections.map((sec, idx) => (
-                  <div key={idx} className="admin-faq-row" style={{ marginBottom: '20px' }}>
-                    <div className="admin-form-group">
-                      <label>Section {idx + 1} Heading</label>
-                      <input
-                        type="text"
-                        className="admin-input"
-                        value={sec.heading}
-                        onChange={(e) => handleUpdateSection(idx, 'heading', e.target.value)}
-                      />
-                    </div>
-
-                    <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#46554b', textTransform: 'uppercase' }}>
-                      Content (Format with Toolbar)
-                    </label>
-
-                    {/* Rich Text Toolbar */}
-                    <div className="admin-rte-toolbar">
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'bold')}><b>B</b></button>
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'italic')}><i>I</i></button>
-                      <span className="admin-tool-sep" />
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'h2')}>H2</button>
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'h3')}>H3</button>
-                      <span className="admin-tool-sep" />
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'ul')}>• Bullets</button>
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'ol')}>1. Numbers</button>
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'quote')}>❝ Quote</button>
-                      <span className="admin-tool-sep" />
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'link')}>🔗 Link</button>
-                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'image')}>📷 Image</button>
-                    </div>
-
-                    <textarea
-                      id={`section-textarea-${idx}`}
-                      rows="7"
-                      className="admin-rte-textarea"
-                      value={sec.content}
-                      onChange={(e) => handleUpdateSection(idx, 'content', e.target.value)}
-                      placeholder="Write your section content here..."
-                    />
-
-                    {draft.sections.length > 1 && (
-                      <button type="button" className="admin-remove-btn" onClick={() => handleRemoveSection(idx)}>
-                        Remove Section
-                      </button>
-                    )}
-                  </div>
-                ))}
+                <TiptapEditor
+                  key={draft.id || draft.slug}
+                  content={draft.contentHtml || convertSectionsToHtml(draft.sections)}
+                  onChange={(html) => setDraft((prev) => ({ ...prev, contentHtml: html }))}
+                />
               </div>
 
               {/* FAQs Section */}

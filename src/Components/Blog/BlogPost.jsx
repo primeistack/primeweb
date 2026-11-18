@@ -143,8 +143,14 @@ export default function BlogPost({ previewPost }) {
             </div>
           )}
 
-          {/* Sections */}
-          {post.sections && post.sections.map((sec, idx) => {
+          {/* Article Content: Rich HTML from Tiptap or Structured Sections */}
+          {post.contentHtml ? (
+            <div 
+              className="blog-body-rich" 
+              dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
+            />
+          ) : (
+            post.sections && post.sections.map((sec, idx) => {
             // Place secondary image after Section 4
             const showSecondaryImg = idx === 3 && post.secondaryImage
 
@@ -233,7 +239,7 @@ export default function BlogPost({ previewPost }) {
                 )}
               </div>
             )
-          })}
+          }))}
 
           {/* Comparison Table */}
           {post.comparisonTable && (

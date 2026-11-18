@@ -588,3 +588,63 @@
     text-align: center;
   }
 }
+
+/* Rich HTML Rendered from Tiptap Editor */
+.blog-body-rich h2 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(24px, 3.5vw, 32px);
+  color: #1b3824;
+  margin: 44px 0 16px;
+  padding-top: 20px;
+  border-top: 1px solid #edf2e8;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.blog-body-rich h2:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.blog-body-rich h3 {
+  font-size: 20px;
+  color: #254b33;
+  margin: 28px 0 12px;
+}
+
+.blog-body-rich p {
+  margin: 0 0 20px;
+}
+
+.blog-body-rich ul,
+.blog-body-rich ol {
+  margin: 0 0 24px;
+  padding-left: 24px;
+}
+
+.blog-body-rich li {
+  margin-bottom: 10px;
+}
+
+.blog-body-rich strong {
+  color: #162a1c;
+}
+
+.blog-body-rich blockquote {
+  border-left: 4px solid #4a835b;
+  background: #f1f7ec;
+  padding: 12px 20px;
+  margin: 24px 0;
+  border-radius: 0 6px 6px 0;
+  font-style: italic;
+  color: #25442e;
+}
+
+.blog-body-rich img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 24px 0;
+  border: 1px solid #e1e9dc;
+}

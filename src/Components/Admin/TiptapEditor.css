@@ -1,0 +1,195 @@
+/* Tiptap Visual Editor matching user's requested Simple Editor template */
+.tiptap-editor-wrap {
+  background: #181c19;
+  border: 1px solid #2d382f;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin-top: 8px;
+}
+
+/* Dark professional toolbar like the screenshot */
+.tiptap-toolbar {
+  background: #131714;
+  border-bottom: 1px solid #242e26;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tiptap-btn {
+  background: transparent;
+  color: #c5d4c8;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  min-width: 30px;
+  height: 30px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.tiptap-btn:hover {
+  background: #242e26;
+  color: #ffffff;
+  border-color: #38493b;
+}
+
+.tiptap-btn.is-active {
+  background: #274b33;
+  color: #c6df9c;
+  border-color: #4a7556;
+}
+
+.tiptap-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.tiptap-sep {
+  width: 1px;
+  height: 20px;
+  background: #28342a;
+  margin: 0 4px;
+}
+
+/* Editor content area */
+.tiptap-content {
+  padding: 28px 32px;
+  min-height: 480px;
+  background: #181c19;
+  color: #e5ede7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+  outline: none;
+}
+
+/* Tiptap ProseMirror styling */
+.tiptap-content .ProseMirror {
+  outline: none;
+  min-height: 440px;
+}
+
+.tiptap-content h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 32px;
+  color: #ffffff;
+  margin: 32px 0 16px;
+  line-height: 1.25;
+}
+
+.tiptap-content h2 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 26px;
+  color: #c6df9c;
+  margin: 28px 0 14px;
+  line-height: 1.3;
+  border-bottom: 1px solid #28382c;
+  padding-bottom: 8px;
+}
+
+.tiptap-content h3 {
+  font-size: 20px;
+  color: #a4cca8;
+  margin: 22px 0 10px;
+}
+
+.tiptap-content p {
+  margin: 0 0 18px;
+  color: #d1ded4;
+}
+
+.tiptap-content strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.tiptap-content em {
+  color: #c5dfb5;
+}
+
+.tiptap-content ul,
+.tiptap-content ol {
+  padding-left: 24px;
+  margin: 0 0 20px;
+}
+
+.tiptap-content li {
+  margin-bottom: 8px;
+  color: #d1ded4;
+}
+
+.tiptap-content blockquote {
+  border-left: 3px solid #739259;
+  padding: 8px 18px;
+  margin: 20px 0;
+  color: #cbd9c8;
+  background: #1f2721;
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+}
+
+.tiptap-content code {
+  background: #232b25;
+  color: #c6df9c;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: monospace;
+}
+
+.tiptap-content hr {
+  border: none;
+  border-top: 1px solid #2d3b31;
+  margin: 32px 0;
+}
+
+.tiptap-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 20px 0;
+  border: 1px solid #334437;
+}
+
+.tiptap-content a {
+  color: #8ed08f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Light mode preview */
+.tiptap-content.light-mode {
+  background: #ffffff;
+  color: #1e2922;
+}
+
+.tiptap-content.light-mode h1,
+.tiptap-content.light-mode h2 {
+  color: #1b3824;
+}
+
+.tiptap-content.light-mode p,
+.tiptap-content.light-mode li {
+  color: #38483e;
+}
+
+.tiptap-content.light-mode strong {
+  color: #112217;
+}
+
+.tiptap-content.light-mode blockquote {
+  background: #edf5e7;
+  color: #27402f;
+}
