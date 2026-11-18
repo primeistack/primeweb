@@ -42,9 +42,14 @@ function NewsUpdate() {
     const [blogs, setBlogs] = useState(() => getStoredBlogs())
 
     useEffect(() => {
-        fetchBlogsFromSupabase().then((data) => {
-            if (data && data.length > 0) setBlogs(data)
-        })
+        const load = () => {
+            fetchBlogsFromSupabase().then((data) => {
+                if (data && data.length > 0) setBlogs(data)
+            })
+        }
+        load()
+        window.addEventListener('focus', load)
+        return () => window.removeEventListener('focus', load)
     }, [])
 
     const featuredBlog = blogs[0]

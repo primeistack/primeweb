@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -6,6 +7,8 @@ import Image from '@tiptap/extension-image'
 import './TiptapEditor.css'
 
 export default function TiptapEditor({ content, onChange }) {
+  const fileInputRef = useRef(null)
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -32,14 +35,39 @@ export default function TiptapEditor({ content, onChange }) {
     },
   })
 
+  // Keep editor content in sync when loaded dynamically (e.g. from Supabase)
+  useEffect(() => {
+    if (editor && content && editor.getHTML() !== content) {
+      editor.commands.setContent(content)
+    }
+  }, [content, editor])
+
   if (!editor) {
     return null
   }
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        if (reader.result) {
+          editor.chain().focus().setImage({ src: reader.result }).run()
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const addImage = () => {
-    const url = window.prompt('Enter Image URL (e.g. /blog/why-investing-open-plots-hyderabad.webp):')
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
+    const choice = window.confirm('Click OK to upload an image from your computer, or Cancel to enter an Image URL.')
+    if (choice) {
+      if (fileInputRef.current) fileInputRef.current.click()
+    } else {
+      const url = window.prompt('Enter Image URL (e.g. /blog/why-investing-open-plots-hyderabad.webp):')
+      if (url) {
+        editor.chain().focus().setImage({ src: url }).run()
+      }
     }
   }
 
@@ -194,10 +222,17 @@ export default function TiptapEditor({ content, onChange }) {
           type="button"
           className="tiptap-btn"
           onClick={addImage}
-          title="Insert Image"
+          title="Insert Image (Upload or URL)"
         >
           🖼️ Image
         </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleFileUpload}
+        />
         <button
           type="button"
           className="tiptap-btn"

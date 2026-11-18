@@ -230,9 +230,8 @@ export async function saveBlogToSupabase(blog) {
     category: blog.category || 'Land Investment Guide',
     date: blog.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     read_time: blog.readTime || '8 min read',
-    hero_image: typeof blog.heroImage === 'string' && blog.heroImage.startsWith('data:') 
-      ? '/blog/why-investing-open-plots-hyderabad.webp' 
-      : (blog.heroImage || '/blog/why-investing-open-plots-hyderabad.webp'),
+    hero_image: blog.heroImage || '/blog/why-investing-open-plots-hyderabad.webp',
+    secondary_image: blog.secondaryImage || '/blog/open-plots-lifestyle-hyderabad.webp',
     summary: blog.summary || '',
     content_html: blog.contentHtml || '',
     faqs: blog.faqs || [],

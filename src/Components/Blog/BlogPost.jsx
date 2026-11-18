@@ -22,10 +22,19 @@ export default function BlogPost({ previewPost }) {
       setPost(previewPost)
       return
     }
-    fetchBlogsFromSupabase().then((blogs) => {
-      const found = blogs.find((b) => b.slug === slug || b.id === slug)
-      if (found) setPost(found)
-    })
+
+    const loadData = () => {
+      fetchBlogsFromSupabase().then((blogs) => {
+        const found = blogs.find((b) => b.slug === slug || b.id === slug)
+        if (found) setPost(found)
+      })
+    }
+
+    loadData()
+
+    // Real-time dynamic sync: auto-updates when tab gains focus
+    window.addEventListener('focus', loadData)
+    return () => window.removeEventListener('focus', loadData)
   }, [slug, previewPost])
 
   if (!post) {

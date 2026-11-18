@@ -512,6 +512,16 @@ export default function AdminPortal() {
                   <div style={{ marginTop: '8px' }}>
                     <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'heroImage')} />
                   </div>
+                  {draft.heroImage && (
+                    <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <img 
+                        src={draft.heroImage} 
+                        alt="Hero preview" 
+                        style={{ height: '70px', width: 'auto', borderRadius: '4px', border: '1px solid #c6df9c', objectFit: 'cover' }} 
+                      />
+                      <span style={{ fontSize: '12px', color: '#55665a' }}>✓ Hero Banner Active</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="admin-form-group">
@@ -526,6 +536,16 @@ export default function AdminPortal() {
                   <div style={{ marginTop: '8px' }}>
                     <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'secondaryImage')} />
                   </div>
+                  {draft.secondaryImage && (
+                    <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <img 
+                        src={draft.secondaryImage} 
+                        alt="Secondary preview" 
+                        style={{ height: '70px', width: 'auto', borderRadius: '4px', border: '1px solid #c6df9c', objectFit: 'cover' }} 
+                      />
+                      <span style={{ fontSize: '12px', color: '#55665a' }}>✓ In-Body Image Active</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -542,7 +562,7 @@ export default function AdminPortal() {
                 </p>
 
                 <TiptapEditor
-                  key={draft.id || draft.slug}
+                  key={`${draft.id || draft.slug}-${draft.contentHtml ? 'html' : 'sec'}`}
                   content={draft.contentHtml || convertSectionsToHtml(draft.sections)}
                   onChange={(html) => setDraft((prev) => ({ ...prev, contentHtml: html }))}
                 />
