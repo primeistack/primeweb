@@ -20,7 +20,7 @@
   border-radius: 8px;
   padding: 40px;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
@@ -69,7 +69,7 @@
 .admin-header {
   background: #1e3d29;
   color: #ffffff;
-  padding: 18px 24px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,9 +78,8 @@
 
 .admin-header h1 {
   margin: 0;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -99,12 +98,12 @@
 .admin-header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .admin-view-toggle {
   display: flex;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   padding: 3px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -138,34 +137,121 @@
   cursor: pointer;
 }
 
-/* Main Container */
+/* Container */
 .admin-container {
   display: flex;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 60px);
 }
 
-/* Split screen layout */
 .admin-split {
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
 }
 
+.admin-split.editor-only {
+  grid-template-columns: 1fr;
+}
+
+.admin-split.preview-only {
+  grid-template-columns: 1fr;
+}
+
 .admin-editor-panel {
-  padding: 28px;
+  padding: 24px;
   overflow-y: auto;
-  max-height: calc(100vh - 65px);
+  max-height: calc(100vh - 60px);
   background: #ffffff;
   border-right: 1px solid #dce5d7;
 }
 
 .admin-preview-panel {
   overflow-y: auto;
-  max-height: calc(100vh - 65px);
+  max-height: calc(100vh - 60px);
   background: #f7f8f1;
 }
 
-/* Editor Forms */
+/* Post Manager Banner */
+.admin-posts-banner {
+  background: #f1f7ec;
+  border: 1px solid #cfe0c8;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.admin-posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.admin-posts-header h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #1f422b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-post-item {
+  background: #ffffff;
+  border: 1px solid #dbe6d5;
+  border-radius: 4px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.admin-post-item.selected {
+  border-color: #254b33;
+  background: #fafff8;
+  box-shadow: 0 0 0 1px #254b33;
+}
+
+.admin-post-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-post-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1b3824;
+}
+
+.admin-post-meta {
+  font-size: 12px;
+  color: #6a7c6f;
+}
+
+.admin-post-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-btn-edit {
+  background: #254b33;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-btn-edit:hover {
+  background: #173822;
+}
+
+/* Section Cards */
 .admin-section-card {
   background: #ffffff;
   border: 1px solid #e1e9dc;
@@ -189,7 +275,7 @@
 
 .admin-form-group label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #46554b;
   margin-bottom: 6px;
@@ -198,8 +284,7 @@
 }
 
 .admin-input,
-.admin-textarea,
-.admin-select {
+.admin-textarea {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #d0dcce;
@@ -211,8 +296,7 @@
 }
 
 .admin-input:focus,
-.admin-textarea:focus,
-.admin-select:focus {
+.admin-textarea:focus {
   border-color: #254b33;
   outline: none;
 }
@@ -223,70 +307,66 @@
   gap: 16px;
 }
 
-/* WYSIWYG Rich Text Editor */
-.admin-rte-container {
-  border: 1px solid #cfdccc;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #ffffff;
-}
-
+/* Rich Text Formatting Toolbar */
 .admin-rte-toolbar {
-  background: #f7faf4;
-  border-bottom: 1px solid #e0ebd9;
-  padding: 8px 10px;
+  background: #f4f8ee;
+  border: 1px solid #cfdccc;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
 
-.admin-toolbar-btn {
+.admin-tool-btn {
   background: #ffffff;
-  border: 1px solid #d4dec0;
+  border: 1px solid #c9d8c4;
   border-radius: 3px;
-  padding: 5px 9px;
+  padding: 4px 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #27402f;
   cursor: pointer;
-  color: #2c3c31;
-  transition: all 0.15s;
+  transition: background 0.15s;
 }
 
-.admin-toolbar-btn:hover {
-  background: #eef5e6;
+.admin-tool-btn:hover {
+  background: #e3efdc;
   border-color: #254b33;
 }
 
-.admin-toolbar-separator {
+.admin-tool-sep {
   width: 1px;
-  height: 22px;
-  background: #dce5d7;
+  height: 20px;
+  background: #d5e0d1;
   margin: 0 4px;
   align-self: center;
 }
 
-.admin-rte-editor {
-  min-height: 380px;
-  padding: 16px;
-  font-size: 15px;
+.admin-rte-textarea {
+  width: 100%;
+  border: 1px solid #cfdccc;
+  border-radius: 0 0 4px 4px;
+  padding: 12px;
+  font-size: 14px;
   line-height: 1.7;
-  color: #222;
+  font-family: inherit;
+  box-sizing: border-box;
   outline: none;
-  overflow-y: auto;
 }
 
-.admin-rte-editor:focus {
-  background: #fffffb;
+.admin-rte-textarea:focus {
+  border-color: #254b33;
 }
 
-/* Table and FAQ items */
+/* FAQ Rows */
 .admin-faq-row {
-  background: #fbfdf9;
-  border: 1px solid #e3ebe0;
+  background: #fafdf7;
+  border: 1px solid #e1ebdc;
   border-radius: 4px;
   padding: 14px;
   margin-bottom: 12px;
-  position: relative;
 }
 
 .admin-remove-btn {
@@ -298,13 +378,13 @@
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .admin-add-btn {
-  background: #e8f4e2;
+  background: #eef6ea;
   color: #254b33;
-  border: 1px dashed #739259;
+  border: 1px dashed #7ea368;
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 12px;
@@ -325,11 +405,13 @@
   justify-content: space-between;
   gap: 12px;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  z-index: 10;
 }
 
 .admin-save-notice {
-  font-size: 12px;
-  color: #637267;
+  font-size: 13px;
+  font-weight: 600;
+  color: #254b33;
 }
 
 .admin-publish-actions {
@@ -349,7 +431,7 @@
 }
 
 .admin-btn-primary {
-  padding: 9px 20px;
+  padding: 9px 22px;
   background: #254b33;
   color: #ffffff;
   border: none;
@@ -364,12 +446,8 @@
   background: #183823;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
   .admin-split {
     grid-template-columns: 1fr;
-  }
-  .admin-editor-panel {
-    border-right: none;
   }
 }

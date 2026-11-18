@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getStoredBlogs, saveStoredBlogs } from '../../data/blogs.js'
+import { getStoredBlogs, saveStoredBlogs, initialBlogs } from '../../data/blogs.js'
 import BlogPost from '../Blog/BlogPost.jsx'
 import './AdminPortal.css'
 
@@ -27,50 +27,23 @@ export default function AdminPortal() {
   const [loginError, setLoginError] = useState('')
   const [viewMode, setViewMode] = useState('split') // 'split' | 'editor' | 'preview'
   const [blogsList, setBlogsList] = useState([])
-  const [selectedPostId, setSelectedPostId] = useState('new')
+  const [activePostId, setActivePostId] = useState('')
   const [saveStatus, setSaveStatus] = useState('')
 
-  // Draft state
-  const [draft, setDraft] = useState({
-    id: '',
-    slug: '',
-    title: '',
-    subtitle: '',
-    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-    author: 'Prime Realtors Team',
-    category: 'Land Investment Guide',
-    readTime: '7 min read',
-    heroImage: '/blog/why-investing-open-plots-hyderabad.webp',
-    heroImageAlt: '',
-    secondaryImage: '/blog/open-plots-lifestyle-hyderabad.webp',
-    secondaryImageAlt: '',
-    summary: '',
-    metaDescription: '',
-    sections: [
-      {
-        heading: '1. Introduction & Overview',
-        content: 'Write your first section paragraph here. You can use **bold text**, bullet points, or subheadings.'
-      }
-    ],
-    faqs: [
-      {
-        question: 'Example Question 1?',
-        answer: 'Example answer providing clear guidance to property buyers.'
-      }
-    ],
-    comparisonTable: {
-      headers: ['Feature', 'Open Plots', 'Apartments'],
-      rows: [
-        ['Ownership', 'Individual plot title', 'Undivided land share (UDS)'],
-        ['Flexibility', 'Custom house architecture', 'Pre-designed layout']
-      ]
-    }
+  // Draft state initialized with initial blog so it is immediately editable!
+  const [draft, setDraft] = useState(() => {
+    const list = getStoredBlogs()
+    return list[0] || initialBlogs[0]
   })
 
   // Load stored blogs on mount
   useEffect(() => {
     const stored = getStoredBlogs()
     setBlogsList(stored)
+    if (stored.length > 0) {
+      setActivePostId(stored[0].id || stored[0].slug)
+      setDraft(JSON.parse(JSON.stringify(stored[0])))
+    }
   }, [])
 
   // Handle Login with SHA-256
@@ -111,40 +84,48 @@ export default function AdminPortal() {
   }
 
   // Load an existing blog to edit
-  const handleSelectPost = (id) => {
-    setSelectedPostId(id)
-    if (id === 'new') {
-      setDraft({
-        id: 'new-' + Date.now(),
-        slug: '',
-        title: '',
-        subtitle: '',
-        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-        author: 'Prime Realtors Team',
-        category: 'Land Investment Guide',
-        readTime: '6 min read',
-        heroImage: '/blog/why-investing-open-plots-hyderabad.webp',
-        heroImageAlt: '',
-        secondaryImage: '/blog/open-plots-lifestyle-hyderabad.webp',
-        secondaryImageAlt: '',
-        summary: '',
-        metaDescription: '',
-        sections: [
-          { heading: '1. Introduction', content: 'Write here...' }
-        ],
-        faqs: [],
-        comparisonTable: null
-      })
-    } else {
-      const found = blogsList.find((b) => b.id === id || b.slug === id)
-      if (found) {
-        setDraft(JSON.parse(JSON.stringify(found)))
-      }
-    }
+  const handleEditPost = (post) => {
+    setActivePostId(post.id || post.slug)
+    setDraft(JSON.parse(JSON.stringify(post)))
+    window.scrollTo({ top: 300, behavior: 'smooth' })
   }
 
-  // Save to browser
-  const handleSaveToBrowser = () => {
+  const handleCreateNew = () => {
+    const newId = 'post-' + Date.now()
+    setActivePostId('new')
+    setDraft({
+      id: newId,
+      slug: 'new-article-' + Date.now(),
+      title: 'New Article Title',
+      subtitle: 'Brief engaging subtitle for the new article...',
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      author: 'Prime Realtors Team',
+      category: 'Land Investment Guide',
+      readTime: '6 min read',
+      heroImage: '/blog/why-investing-open-plots-hyderabad.webp',
+      heroImageAlt: 'Open residential plots in Ibrahimpatnam near Hyderabad',
+      secondaryImage: '/blog/open-plots-lifestyle-hyderabad.webp',
+      secondaryImageAlt: 'Scenic greenery and plotted layout',
+      summary: 'Executive summary explaining key takeaways of this guide...',
+      metaDescription: 'SEO meta description for Google search results...',
+      sections: [
+        {
+          heading: '1. Introduction',
+          content: 'Write your first section paragraph here. Use **bold text** for emphasis.'
+        }
+      ],
+      faqs: [
+        {
+          question: 'Sample Question 1?',
+          answer: 'Clear, helpful answer explaining property details.'
+        }
+      ],
+      comparisonTable: null
+    })
+  }
+
+  // Save changes
+  const handleSave = () => {
     const updated = [...blogsList]
     const existingIndex = updated.findIndex((b) => b.id === draft.id || b.slug === draft.slug)
 
@@ -156,14 +137,14 @@ export default function AdminPortal() {
 
     setBlogsList(updated)
     saveStoredBlogs(updated)
-    setSaveStatus('✓ Saved to website! Post is live on your browser.')
+    setSaveStatus('✓ Saved successfully! Updated in site state.')
     setTimeout(() => setSaveStatus(''), 4000)
   }
 
   // Copy JSON
   const handleCopyJSON = () => {
     navigator.clipboard.writeText(JSON.stringify(draft, null, 2))
-    setSaveStatus('✓ Blog JSON copied to clipboard!')
+    setSaveStatus('✓ Article JSON copied to clipboard!')
     setTimeout(() => setSaveStatus(''), 4000)
   }
 
@@ -178,6 +159,53 @@ export default function AdminPortal() {
     downloadAnchor.remove()
     setSaveStatus('✓ Blogs JSON file downloaded!')
     setTimeout(() => setSaveStatus(''), 4000)
+  }
+
+  // Rich Text Formatting Toolbar Helper
+  const applyFormatting = (sectionIndex, tag) => {
+    const textarea = document.getElementById(`section-textarea-${sectionIndex}`)
+    if (!textarea) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const text = textarea.value
+    const selected = text.substring(start, end) || 'text'
+    let replacement = ''
+
+    switch (tag) {
+      case 'bold':
+        replacement = `**${selected}**`
+        break
+      case 'italic':
+        replacement = `*${selected}*`
+        break
+      case 'h2':
+        replacement = `\n## ${selected}\n`
+        break
+      case 'h3':
+        replacement = `\n### ${selected}\n`
+        break
+      case 'ul':
+        replacement = `\n* ${selected}\n* Second item`
+        break
+      case 'ol':
+        replacement = `\n1. ${selected}\n2. Second item`
+        break
+      case 'quote':
+        replacement = `\n> ${selected}\n`
+        break
+      case 'link':
+        replacement = `[${selected}](https://prime-realtors.in/contact)`
+        break
+      case 'image':
+        replacement = `\n![Image caption](/blog/open-plots-lifestyle-hyderabad.webp)\n`
+        break
+      default:
+        replacement = selected
+    }
+
+    const newContent = text.substring(0, start) + replacement + text.substring(end)
+    handleUpdateSection(sectionIndex, 'content', newContent)
   }
 
   // Section handlers
@@ -264,7 +292,7 @@ export default function AdminPortal() {
       <header className="admin-header">
         <h1>
           <span>Prime Realtors Portal</span>
-          <span className="admin-header-badge">No DB · Static CMS</span>
+          <span className="admin-header-badge">WYSIWYG &amp; Preview</span>
         </h1>
 
         <div className="admin-header-actions">
@@ -309,45 +337,52 @@ export default function AdminPortal() {
           {/* LEFT: Editor Panel */}
           {viewMode !== 'preview' && (
             <div className="admin-editor-panel">
-              {/* Select Existing or Create New */}
-              <div className="admin-section-card" style={{ background: '#f4f8ee' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <strong>Manage Articles:</strong>
+              {/* Blog Posts Manager Banner */}
+              <div className="admin-posts-banner">
+                <div className="admin-posts-header">
+                  <h3>Existing Blog Posts ({blogsList.length})</h3>
                   <button 
                     type="button" 
-                    className="admin-toolbar-btn" 
-                    style={{ background: '#254b33', color: '#fff', border: 'none' }}
-                    onClick={() => handleSelectPost('new')}
+                    className="admin-tool-btn" 
+                    style={{ background: '#254b33', color: '#fff', border: 'none', padding: '6px 12px' }}
+                    onClick={handleCreateNew}
                   >
                     + Write New Post
                   </button>
                 </div>
-                <div style={{ marginTop: '10px' }}>
-                  <select 
-                    className="admin-select" 
-                    value={selectedPostId} 
-                    onChange={(e) => handleSelectPost(e.target.value)}
-                  >
-                    <option value="new">+ Write New Post</option>
-                    {blogsList.map((b) => (
-                      <option key={b.id || b.slug} value={b.id || b.slug}>
-                        {b.title || 'Untitled Post'}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+
+                {blogsList.map((post) => {
+                  const isSelected = (post.id || post.slug) === activePostId
+                  return (
+                    <div key={post.id || post.slug} className={`admin-post-item ${isSelected ? 'selected' : ''}`}>
+                      <div className="admin-post-info">
+                        <span className="admin-post-title">{post.title}</span>
+                        <span className="admin-post-meta">{post.category} · {post.date} · {post.readTime}</span>
+                      </div>
+                      <div className="admin-post-actions">
+                        <button 
+                          type="button" 
+                          className="admin-btn-edit"
+                          onClick={() => handleEditPost(post)}
+                        >
+                          {isSelected ? 'Editing Now' : '✏️ Edit Post'}
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
 
               {/* Basic Article Meta */}
               <div className="admin-section-card">
-                <h3>1. Post Details &amp; SEO</h3>
+                <h3>1. Post Details &amp; Meta</h3>
                 <div className="admin-form-group">
                   <label>Article Title</label>
                   <input
                     type="text"
                     className="admin-input"
-                    placeholder="e.g. Why Investing in Open Plots Near Hyderabad Is a Smart Choice"
-                    value={draft.title}
+                    placeholder="Article title..."
+                    value={draft.title || ''}
                     onChange={(e) => handleTitleChange(e.target.value)}
                   />
                 </div>
@@ -426,7 +461,7 @@ export default function AdminPortal() {
                     type="text"
                     className="admin-input"
                     placeholder="e.g. /blog/why-investing-open-plots-hyderabad.webp"
-                    value={typeof draft.heroImage === 'string' && draft.heroImage.startsWith('data:') ? '(Uploaded Image)' : draft.heroImage || ''}
+                    value={typeof draft.heroImage === 'string' && draft.heroImage.startsWith('data:') ? '(Uploaded Custom Image)' : draft.heroImage || ''}
                     onChange={(e) => setDraft({ ...draft, heroImage: e.target.value })}
                   />
                   <div style={{ marginTop: '8px' }}>
@@ -440,7 +475,7 @@ export default function AdminPortal() {
                     type="text"
                     className="admin-input"
                     placeholder="e.g. /blog/open-plots-lifestyle-hyderabad.webp"
-                    value={typeof draft.secondaryImage === 'string' && draft.secondaryImage.startsWith('data:') ? '(Uploaded Image)' : draft.secondaryImage || ''}
+                    value={typeof draft.secondaryImage === 'string' && draft.secondaryImage.startsWith('data:') ? '(Uploaded Custom Image)' : draft.secondaryImage || ''}
                     onChange={(e) => setDraft({ ...draft, secondaryImage: e.target.value })}
                   />
                   <div style={{ marginTop: '8px' }}>
@@ -449,17 +484,17 @@ export default function AdminPortal() {
                 </div>
               </div>
 
-              {/* Rich Content Sections */}
+              {/* Rich Content Sections with WYSIWYG Toolbar */}
               <div className="admin-section-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                  <h3 style={{ margin: 0 }}>3. Article Sections</h3>
-                  <button type="button" className="admin-toolbar-btn" onClick={handleAddSection}>
+                  <h3 style={{ margin: 0 }}>3. Article Sections (Rich Editor)</h3>
+                  <button type="button" className="admin-tool-btn" onClick={handleAddSection}>
                     + Add Section
                   </button>
                 </div>
 
                 {draft.sections && draft.sections.map((sec, idx) => (
-                  <div key={idx} className="admin-faq-row">
+                  <div key={idx} className="admin-faq-row" style={{ marginBottom: '20px' }}>
                     <div className="admin-form-group">
                       <label>Section {idx + 1} Heading</label>
                       <input
@@ -469,15 +504,36 @@ export default function AdminPortal() {
                         onChange={(e) => handleUpdateSection(idx, 'heading', e.target.value)}
                       />
                     </div>
-                    <div className="admin-form-group">
-                      <label>Section Content (Markdown supported: **bold**, * bullets, 1. numbers)</label>
-                      <textarea
-                        rows="5"
-                        className="admin-textarea"
-                        value={sec.content}
-                        onChange={(e) => handleUpdateSection(idx, 'content', e.target.value)}
-                      />
+
+                    <label style={{ fontSize: '11px', fontWeight: 'bold', color: '#46554b', textTransform: 'uppercase' }}>
+                      Content (Format with Toolbar)
+                    </label>
+
+                    {/* Rich Text Toolbar */}
+                    <div className="admin-rte-toolbar">
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'bold')}><b>B</b></button>
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'italic')}><i>I</i></button>
+                      <span className="admin-tool-sep" />
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'h2')}>H2</button>
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'h3')}>H3</button>
+                      <span className="admin-tool-sep" />
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'ul')}>• Bullets</button>
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'ol')}>1. Numbers</button>
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'quote')}>❝ Quote</button>
+                      <span className="admin-tool-sep" />
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'link')}>🔗 Link</button>
+                      <button type="button" className="admin-tool-btn" onClick={() => applyFormatting(idx, 'image')}>📷 Image</button>
                     </div>
+
+                    <textarea
+                      id={`section-textarea-${idx}`}
+                      rows="7"
+                      className="admin-rte-textarea"
+                      value={sec.content}
+                      onChange={(e) => handleUpdateSection(idx, 'content', e.target.value)}
+                      placeholder="Write your section content here..."
+                    />
+
                     {draft.sections.length > 1 && (
                       <button type="button" className="admin-remove-btn" onClick={() => handleRemoveSection(idx)}>
                         Remove Section
@@ -490,8 +546,8 @@ export default function AdminPortal() {
               {/* FAQs Section */}
               <div className="admin-section-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                  <h3 style={{ margin: 0 }}>4. FAQs (Google Rich Snippets)</h3>
-                  <button type="button" className="admin-toolbar-btn" onClick={handleAddFaq}>
+                  <h3 style={{ margin: 0 }}>4. Frequently Asked Questions (FAQs)</h3>
+                  <button type="button" className="admin-tool-btn" onClick={handleAddFaq}>
                     + Add FAQ
                   </button>
                 </div>
@@ -527,7 +583,7 @@ export default function AdminPortal() {
               {/* Publish & Export Bar */}
               <div className="admin-publish-bar">
                 <div className="admin-save-notice">
-                  {saveStatus || 'Autosave ready'}
+                  {saveStatus || 'Live editing'}
                 </div>
                 <div className="admin-publish-actions">
                   <button type="button" className="admin-btn-secondary" onClick={handleCopyJSON}>
@@ -536,8 +592,8 @@ export default function AdminPortal() {
                   <button type="button" className="admin-btn-secondary" onClick={handleDownloadJSON}>
                     Download Backup
                   </button>
-                  <button type="button" className="admin-btn-primary" onClick={handleSaveToBrowser}>
-                    Publish to Website
+                  <button type="button" className="admin-btn-primary" onClick={handleSave}>
+                    Save Changes
                   </button>
                 </div>
               </div>
@@ -547,9 +603,9 @@ export default function AdminPortal() {
           {/* RIGHT: Live Preview Panel */}
           {viewMode !== 'editor' && (
             <div className="admin-preview-panel">
-              <div style={{ background: '#254b33', color: '#c6df9c', padding: '10px 20px', fontSize: '12px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                <span>● REAL-TIME LIVE PREVIEW</span>
-                <span>Exact Visitor View</span>
+              <div style={{ background: '#254b33', color: '#c6df9c', padding: '10px 20px', fontSize: '12px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10 }}>
+                <span>● REAL-TIME VISITOR PREVIEW</span>
+                <span>Updates as you type</span>
               </div>
               <BlogPost previewPost={draft} />
             </div>
